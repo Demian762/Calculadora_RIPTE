@@ -12,6 +12,9 @@ Es necesario mantenerla actualizada por este medio para que la precisión del re
 LA IDEA DE ESTA APP ES APROXIMAR UNA IDEA DE LA INDEMNIZACIÓN AL USUARIO, NO SE DEBE TOMAR ESTA INFORMACIÓN COMO BASE PARA NADA MÁS.
 ESTE PROYECTO ES GRATUITO Y ABIERTO.
 
+Para crear la aplicación con el código fuente utilizando pyinstaller:
+pyinstaller --onefile --windowed app.py
+
 version 1.1:
 Se aceptan menos de 12 meses.
 Se puede exportar a excel toda la información procesada (incluídas las tasas).
