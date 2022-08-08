@@ -4,7 +4,9 @@ calcular la indemnización que por ley del riesgo del trabajo corresponde en cas
 
 Se puede descargar lista para usar desde acá:
 https://drive.google.com/file/d/1x_VnT-57ZE7ywJ_FOEBMlf8zTIq35eLp/view?usp=sharing
+
 nota: probablemente haga falta desactivar windows defender u otro antivirus y agregarlo como excepción para que no sea borrado de inmediato.
+
 
 Las tasas son tomadas de páginas web oficiales y no oficiales cada vez que se abre la app.
 Es necesario mantenerla actualizada por este medio para que la presición del resultado sea mayor.
