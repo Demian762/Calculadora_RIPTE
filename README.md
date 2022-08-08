@@ -15,3 +15,5 @@ ESTE PROYECTO ES GRATUITO Y ABIERTO.
 version 1.0:
 De momento hay que agregar 12 sueldos, no acepta menos.
 Si bien está la casilla de días, solo toma para el cálculo, el año y mes.
+
+Por sugerencias: joangodoy@hotmail.com
