@@ -105,7 +105,7 @@ Creando la App
 root=Tk()
 root.title('Calculadora RIPTE')
 root.resizable(0,0)
-root.iconbitmap("icono-calculadora.ico")
+#root.iconbitmap("calculadora.ico")
 #root.geometry("600x450")
 root.config(bg=fondo)
 
@@ -255,11 +255,12 @@ def calcular():
         cliente.to_excel(
             excel_writer="Indemnizacion "+nombre_cliente.get()+".xlsx",
             index=False,
-            sheet_name="Indemnización "+nombre_cliente.get()
+            sheet_name="Indemnización "+nombre_cliente.get(),
+            engine='openpyxl'
             )
 
 def licencia():
-    messagebox.showinfo("Licencia","Software de código abierto y gratuito,\nNO pagues por este programa")
+    messagebox.showinfo("Licencia y versión","Software de código abierto y gratuito,\n\nNO pagues por este programa\n\nVersión 1.1")
 
 def contacto():
     messagebox.showinfo("Contacto:","Por sugerencias:\njoangodoy@hotmail.com")
