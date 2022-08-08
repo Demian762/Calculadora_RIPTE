@@ -1,6 +1,6 @@
 # Calculadora_RIPTE
 Es una aplicación creada para actualizar el salario de un trabajador conforme al índice RIPTE y
-calcular la indemnización que por ley del riesgo del trabajo corresponde en caso de accidente laboral "in itinere" o "en ocasión"
+calcular la indemnización que por Ley de Riesgos del Trabajo corresponde en caso de accidente laboral "in itinere" o "en ocasión"
 
 Se puede descargar lista para usar desde acá:
 https://drive.google.com/file/d/1x_VnT-57ZE7ywJ_FOEBMlf8zTIq35eLp/view?usp=sharing
