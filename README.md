@@ -17,6 +17,7 @@ pyinstaller --onefile --windowed app.py
 
 version 1.1:
 Se aceptan menos de 12 meses.
+Se pueden exportar los datos utilizados en un Excel (tasa incluída).
 Cambios estéticos.
 
 version 1.0:
