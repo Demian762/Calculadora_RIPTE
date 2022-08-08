@@ -13,9 +13,9 @@ LA IDEA DE ESTA APP ES APROXIMAR UNA IDEA DE LA INDEMNIZACIÓN AL USUARIO, NO SE
 ESTE PROYECTO ES GRATUITO Y ABIERTO.
 
 version 1.1:
-Se aceptan menos de 12 meses
-Se puede exportar a excel toda la información procesada (incluídas las tasas)
-cambios estéticos
+Se aceptan menos de 12 meses.
+Se puede exportar a excel toda la información procesada (incluídas las tasas).
+cambios estéticos.
 
 version 1.0:
 De momento hay que agregar 12 sueldos, no acepta menos.
