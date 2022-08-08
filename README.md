@@ -18,7 +18,7 @@ pyinstaller --onefile --windowed app.py
 version 1.1:
 Se aceptan menos de 12 meses.
 Se puede exportar a excel toda la información procesada (incluídas las tasas).
-cambios estéticos.
+Cambios estéticos.
 
 version 1.0:
 De momento hay que agregar 12 sueldos, no acepta menos.
