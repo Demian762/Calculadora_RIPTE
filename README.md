@@ -12,6 +12,11 @@ Es necesario mantenerla actualizada por este medio para que la precisión del re
 LA IDEA DE ESTA APP ES APROXIMAR UNA IDEA DE LA INDEMNIZACIÓN AL USUARIO, NO SE DEBE TOMAR ESTA INFORMACIÓN COMO BASE PARA NADA MÁS.
 ESTE PROYECTO ES GRATUITO Y ABIERTO.
 
+version 1.1:
+Se aceptan menos de 12 meses
+Se puede exportar a excel toda la información procesada (incluídas las tasas)
+cambios estéticos
+
 version 1.0:
 De momento hay que agregar 12 sueldos, no acepta menos.
 Si bien está la casilla de días, solo toma para el cálculo, el año y mes.
