@@ -2,7 +2,7 @@
 
 Es una aplicación creada para calcular la indemnización que por Ley de Riesgos del Trabajo corresponde en caso de accidente laboral "in itinere" o "en ocasión". Podrás obtener el Valor Ingreso Base (VIB) con RIPTE más Tasa.
 
-Se puede descargar lista para usar en "releases" a la derecha de este texto --->
+Se puede descargar lista para usar en "Releases" a la derecha de este texto --->
 
 nota: probablemente haga falta desactivar windows defender u otro antivirus y agregarlo como excepción para que no sea borrado de inmediato.
 
