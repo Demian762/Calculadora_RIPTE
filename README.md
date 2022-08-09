@@ -1,4 +1,5 @@
-# Calculadora_RIPTE
+# CIART (Calculadora de Indemnización de ART)
+
 Es una aplicación creada para calcular la indemnización que por Ley de Riesgos del Trabajo corresponde en caso de accidente laboral "in itinere" o "en ocasión". Podrás obtener el Valor Ingreso Base (VIB) con RIPTE más Tasa.
 
 Se puede descargar lista para usar en "releases" a la derecha de este texto --->
