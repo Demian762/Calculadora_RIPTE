@@ -10,86 +10,18 @@ Cargando archivos de uso general
 Preparación del dataframe general de ripte
 """
 
-ripte = pd.read_csv('https://infra.datos.gob.ar/catalog/sspm/dataset/158/distribution/158.1/download/remuneracion-imponible-promedio-trabajadores-estables-ripte-total-pais-pesos-serie-mensual.csv')
-
-ripte['variacion'] = ripte['ripte'].pct_change(periods=1)*100
-
-ripte['indice'] = 100.0
-
-for i in ripte.index:
-    if i == 0:
-        continue
-    ripte.at[i, 'indice'] = ripte.at[i-1,'indice'] * (1+(ripte.at[i,'variacion']/100))
-
-ripte['final'] = 100.0
-alto = 100.0
-for i in ripte['final'].index:
-    if ripte.at[i,'indice'] > alto:
-        alto = ripte.at[i,'indice']
-    ripte.at[i,'final'] = alto
-
-ripte = ripte.fillna(0)
-ripte = ripte.round(2)
-
-ripte['indice_tiempo'] = ripte['indice_tiempo'].astype('datetime64')
-ripte = ripte.rename(columns={'indice_tiempo':'fechas'})
+ripte = pd.read_csv('https://github.com/Demian762/Calculadora_RIPTE/blob/main/ripte.csv')
+ripte['fechas'] = ripte['fechas'].astype('datetime64')
 ripte['fechas'] = ripte['fechas'].dt.to_period('M')
-
 
 """
 Cargando las tasas de la página del colegio de Rafaela Santa Fe, porque el BNA no tiene nada
 """
 
-link = 'http://www.abogadosrafaela.com.ar/serviciosaprof/tasas-activas-banco-nacion/'
+tasas = pd.read_csv('https://github.com/Demian762/Calculadora_RIPTE/blob/main/tasas.csv')
+tasas['fechas'] = tasas['fechas'].astype('datetime64')
+tasas['fechas'] = tasas['fechas'].dt.to_period('M')
 
-tasas1 = pd.read_html(link, index_col=0, header=0, decimal=','
-    )[0].astype(float)
-
-tasas1 = tasas1.drop(columns='Unnamed: 5')
-
-tasas1['2019']['Enero'] = tasas1['2019']['Enero'] * 10000
-
-tasas1 = tasas1.apply(lambda x: x/10000)
-
-link = 'http://www.abogadosrafaela.com.ar/serviciosaprof/tasas-activas-banco-nacion/'
-
-tasas2 = pd.read_html(link, index_col=0, header=0, decimal=','
-    )[1].astype(float)
-
-tasas2['2015']['Noviembre'] = tasas2['2015']['Noviembre'] * 10000
-tasas2['2016']['Marzo'] = tasas2['2016']['Marzo'] * 10000
-tasas2['2016']['Septiembre'] = tasas2['2016']['Septiembre'] * 10000
-tasas2['2018']['Octubre'] = tasas2['2018']['Octubre'] * 10000
-tasas2['2018']['Noviembre'] = tasas2['2018']['Noviembre'] * 10000
-
-tasas2 = tasas2.apply(lambda x: x/10000)
-
-tasas = pd.concat([tasas2,tasas1], axis=1)
-
-tasas = tasas.drop(columns=['2014','2015','2016'])
-
-ultimo = int(tasas.columns.max())+1
-
-tasas3 = pd.DataFrame(pd.date_range(start='2017-01',end=str(ultimo),freq='M'))
-tasas3[0] = tasas3[0].dt.to_period('M')
-
-tasas3 = tasas3.rename(columns={0:'fechas'})
-
-df = pd.DataFrame()
-for i in tasas.columns:
-    dfn = tasas[i]
-    df = pd.concat([df,dfn])
-
-df = df.reset_index()
-
-tasas = pd.concat([tasas3,df[0]],axis=1)
-tasas = tasas.rename(columns={0:'tasas'})
-
-"""
-Hardcodeados los ultimos meses
-"""
-tasas.at[66,'tasas'] = 4.750   # Este hay que borrarlo eventualmente
-tasas.at[67,'tasas'] = 5.017
 
 """
 Estableciendo colores
