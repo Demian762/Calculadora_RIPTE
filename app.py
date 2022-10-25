@@ -10,7 +10,7 @@ Cargando archivos de uso general
 Preparación del dataframe general de ripte
 """
 
-ripte = pd.read_csv('https://github.com/Demian762/Calculadora_RIPTE/blob/main/ripte.csv')
+ripte = pd.read_csv('https:\\github.com\Demian762\Calculadora_RIPTE\blob\main\ripte.csv')
 ripte['fechas'] = ripte['fechas'].astype('datetime64')
 ripte['fechas'] = ripte['fechas'].dt.to_period('M')
 
@@ -18,7 +18,7 @@ ripte['fechas'] = ripte['fechas'].dt.to_period('M')
 Cargando las tasas de la página del colegio de Rafaela Santa Fe, porque el BNA no tiene nada
 """
 
-tasas = pd.read_csv('https://github.com/Demian762/Calculadora_RIPTE/blob/main/tasas.csv')
+tasas = pd.read_csv('https:\\github.com\Demian762\Calculadora_RIPTE\blob\main\tasas.csv')
 tasas['fechas'] = tasas['fechas'].astype('datetime64')
 tasas['fechas'] = tasas['fechas'].dt.to_period('M')
 
