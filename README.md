@@ -6,9 +6,6 @@ Se puede descargar lista para usar en "Releases" a la derecha de este texto --->
 
 nota: probablemente haga falta desactivar windows defender u otro antivirus y agregarlo como excepción para que no sea borrado de inmediato.
 
-Las tasas son tomadas de páginas web oficiales y no oficiales cada vez que se abre la app.
-Es necesario mantenerla actualizada por este medio para que la precisión del resultado sea mayor.
-
 LA IDEA DE ESTA APP ES APROXIMAR UNA IDEA DE LA INDEMNIZACIÓN AL USUARIO, NO SE DEBE TOMAR ESTA INFORMACIÓN COMO BASE PARA NADA MÁS.
 ESTE PROYECTO ES GRATUITO Y ABIERTO.
 
