@@ -1,24 +1,23 @@
 from tkinter import *
 from tkinter import messagebox
-import tkinter
 import numpy as np
 import pandas as pd
 
 """
 Cargando archivos de uso general
 
-Preparación del dataframe general de ripte
+Cargando ripte
 """
 
-ripte = pd.read_csv('https:\\github.com\Demian762\Calculadora_RIPTE\blob\main\ripte.csv')
+ripte = pd.read_csv('https://raw.githubusercontent.com/Demian762/Calculadora_RIPTE/main/ripte.csv')
 ripte['fechas'] = ripte['fechas'].astype('datetime64')
 ripte['fechas'] = ripte['fechas'].dt.to_period('M')
 
 """
-Cargando las tasas de la página del colegio de Rafaela Santa Fe, porque el BNA no tiene nada
+Cargando las tasas
 """
 
-tasas = pd.read_csv('https:\\github.com\Demian762\Calculadora_RIPTE\blob\main\tasas.csv')
+tasas = pd.read_csv('https://raw.githubusercontent.com/Demian762/Calculadora_RIPTE/main/tasas.csv')
 tasas['fechas'] = tasas['fechas'].astype('datetime64')
 tasas['fechas'] = tasas['fechas'].dt.to_period('M')
 
@@ -35,10 +34,8 @@ casilla = "#F2944A"
 Creando la App
 """
 root=Tk()
-root.title('Calculadora RIPTE')
+root.title('Calculadora de Indemnización de ART')
 root.resizable(0,0)
-#root.iconbitmap("calculadora.ico")
-#root.geometry("600x450")
 root.config(bg=fondo)
 
 miTitulo=Frame(root, width=1200, height=50)
@@ -50,13 +47,40 @@ miNombre.config(bg=fondo)
 miFrame=Frame(root,width=1200,height=600)
 miFrame.pack()
 miFrame.config(bg=fondo)
-miSalida=Frame(root, width=1200, height=50)
+miSalida=Frame(root, width=1200, height=100)
 miSalida.pack(side="bottom")
 miSalida.config(bg=fondo)
 
 """
 Funciones de los botones
 """
+
+def cargar():
+    """
+    Carga un archivo Excel con el nombre indicado en el campo correspondiente
+    """
+
+    nombre_archivo = "indemnizacion " + str(nombre_cliente.get()) + ".xlsx"
+
+    carga = pd.read_excel(nombre_archivo)
+
+    edad_app.set(int(carga["edad"][0]))
+    inca.set(carga["incapacidad"][0])
+    fecha_accidente_ano.set((carga["fecha"][0]).year)
+    fecha_accidente_mes.set((carga["fecha"][0]).month)
+    sueldo1.set(carga["sueldos"][0])
+    sueldo2.set(carga["sueldos"][1])
+    sueldo3.set(carga["sueldos"][2])
+    sueldo4.set(carga["sueldos"][3])
+    sueldo5.set(carga["sueldos"][4])
+    sueldo6.set(carga["sueldos"][5])
+    sueldo7.set(carga["sueldos"][6])
+    sueldo8.set(carga["sueldos"][7])
+    sueldo9.set(carga["sueldos"][8])
+    sueldo10.set(carga["sueldos"][9])
+    sueldo11.set(carga["sueldos"][10])
+    sueldo12.set(carga["sueldos"][11])
+
 
 def limpiar():
     """
@@ -65,7 +89,6 @@ def limpiar():
     nombre_cliente.set('')
     fecha_accidente_ano.set('')
     fecha_accidente_mes.set('')
-    fecha_accidente_dia.set('')
     edad_app.set('')
     inca.set('')
     sueldo1.set('')
@@ -80,17 +103,19 @@ def limpiar():
     sueldo10.set('')
     sueldo11.set('')
     sueldo12.set('')
-    resultado_parcial.set('')
-    resultado_total.set('')
-    
+    resultado_vib_ripte.set('')
+    resultado_tasa_interes.set('')
+    resultado_vib_ripte_tasa.set('')
+    resultado_indemnizacion.set('')
+
+
 def llenar():
     """
     llena todos los valores de la interfaz para realizar pruebas
     """
-    nombre_cliente.set('Juan Pérez')
+    nombre_cliente.set('Juan Prueba')
     fecha_accidente_ano.set('2020')
     fecha_accidente_mes.set('10')
-    fecha_accidente_dia.set('12')
     edad_app.set(32)
     inca.set(7.9)
     sueldo1.set(58000)
@@ -111,7 +136,9 @@ def calcular():
     """
     Inputs
     """
-    fecha_accidente = str(fecha_accidente_ano.get()+'-'+fecha_accidente_mes.get()) # ejemplo de formato: "2020-10"
+    nombres = nombre_cliente.get()
+    # ejemplo de formato: "2020-10"
+    fecha_accidente = str(fecha_accidente_ano.get()+'-'+fecha_accidente_mes.get())
     sueldos = [
                 sueldo1.get(),
                 sueldo2.get(),
@@ -129,7 +156,7 @@ def calcular():
     sueldos = list(filter(None, sueldos))
     sueldos = list(map(float,sueldos))
     edad = int(edad_app.get())
-    incapacidad_actual = float(inca.get())
+    incapacidad = float(inca.get())
     tipo_accidente = int(en_ocasion.get()) # 'in_itinere'=0,'en_ocasion'=1
     exportar = int(generar_excel.get()) # generar excel = 1 , no hacer nada =0
 
@@ -155,33 +182,37 @@ def calcular():
     cliente = cliente.assign(actualizados = lambda x: (x['sueldos']*x['coeficiente']))
     cliente = cliente.round(2)
 
+    cliente.loc[0,"nombres"] = nombres
+    cliente.loc[0,"edad"] = edad
+    cliente.loc[0,"incapacidad"] = incapacidad
+    cliente.loc[0,"fecha"] = pd.to_datetime(fecha_accidente)
+
     """
-    Resultados
+    Resultados finales
     """
 
-    resultado = cliente['actualizados'].mean().round(2)
-
-    """
-    Calculo final con intereses
-    """
+    vib_ripte = cliente['actualizados'].mean().round(2)
 
     fecha_calculo_final = cliente['fechas'].max()
 
-    interes = tasas[tasas['fechas'] > fecha_calculo_final]['tasas'].sum()/100 + 1
+    tasa_interes = tasas[tasas['fechas'] > fecha_calculo_final]['tasas'].sum()/100 + 1
 
-    resultado = (resultado * interes).round(2)
+    vib_ripte_tasa = (vib_ripte * tasa_interes).round(2)
 
-    resultado_ci = 53 * resultado *  (65/edad) * incapacidad_actual/(100)
-    resultado_ci = round(resultado_ci,2)
+    tasa_interes = str(((tasa_interes - 1) * 100).round(2)) + " %"
+
+    indemnizacion = 53 * vib_ripte_tasa *  (65/edad) * incapacidad/(100)
+    indemnizacion = round(indemnizacion,2)
 
     if tipo_accidente == 1:
-        resultado_ci_final = round(resultado_ci*1.2,2)
+        indemnizacion = round(indemnizacion*1.2,2)
     else:
-        resultado_ci_final = resultado_ci
+        indemnizacion = indemnizacion
 
-
-    resultado_parcial.set(resultado)
-    resultado_total.set(resultado_ci_final)
+    resultado_vib_ripte.set(vib_ripte)
+    resultado_tasa_interes.set(tasa_interes)
+    resultado_vib_ripte_tasa.set(vib_ripte_tasa)
+    resultado_indemnizacion.set(indemnizacion)
 
     if exportar == 1:
         cliente.to_excel(
@@ -191,8 +222,40 @@ def calcular():
             engine='openpyxl'
             )
 
+def pormil():
+    
+    sueldo1.set(int(sueldo1.get()*1000))
+    sueldo2.set(int(sueldo2.get()*1000))
+    sueldo3.set(int(sueldo3.get()*1000))
+    sueldo4.set(int(sueldo4.get()*1000))
+    sueldo5.set(int(sueldo5.get()*1000))
+    sueldo6.set(int(sueldo6.get()*1000))
+    sueldo7.set(int(sueldo7.get()*1000))
+    sueldo8.set(int(sueldo8.get()*1000))
+    sueldo9.set(int(sueldo9.get()*1000))
+    sueldo10.set(int(sueldo10.get()*1000))
+    sueldo11.set(int(sueldo11.get()*1000))
+    sueldo12.set(int(sueldo12.get()*1000))
+
+def divmil():
+    
+    sueldo1.set(int(sueldo1.get()/1000))
+    sueldo2.set(int(sueldo2.get()/1000))
+    sueldo3.set(int(sueldo3.get()/1000))
+    sueldo4.set(int(sueldo4.get()/1000))
+    sueldo5.set(int(sueldo5.get()/1000))
+    sueldo6.set(int(sueldo6.get()/1000))
+    sueldo7.set(int(sueldo7.get()/1000))
+    sueldo8.set(int(sueldo8.get()/1000))
+    sueldo9.set(int(sueldo9.get()/1000))
+    sueldo10.set(int(sueldo10.get()/1000))
+    sueldo11.set(int(sueldo11.get()/1000))
+    sueldo12.set(int(sueldo12.get()/1000))
+
 def licencia():
-    messagebox.showinfo("Licencia y versión","Software de código abierto y gratuito,\n\nNO pagues por este programa\n\nVersión 1.1")
+    messagebox.showinfo(
+        "Licencia y versión","Software de código abierto y gratuito,\n\nNO pagues por este programa\n\nVersión 1.2"
+        )
 
 def contacto():
     messagebox.showinfo("Contacto:","Por sugerencias:\njoangodoy@hotmail.com")
@@ -224,9 +287,9 @@ barraMenu.add_cascade(label="Acerca", menu=acercaMenu)
 Título
 """
 
-titulo = Label(miTitulo,text="Calculadora RIPTE")
+titulo = Label(miTitulo,text="CIART 1.2")
 titulo.grid(row=0,column=0,sticky=W,pady=15,padx=10)
-titulo.config(bg=fondo, fg=letras, font=("Times New Roman",20))
+titulo.config(bg=fondo, fg=letras, font=("Times New Roman",25))
 
 """
 Nombre del Cliente
@@ -245,7 +308,6 @@ cuadroNombre.config(fg="black", justify='center', bg=casilla, font=("Times New R
 """
 Fecha del accidente
 """
-meses = ['01','02','03','04','05','06','07','08','09','10','11','12']
 
 fechaLabel_ano = Label(miFrame,text="Año: ")
 fechaLabel_ano.grid(row=0,column=1,sticky=SW,pady=0,padx=10)
@@ -253,9 +315,6 @@ fechaLabel_ano.config(bg=fondo, fg=letras, font=("Times New Roman",14))
 fechaLabel_mes = Label(miFrame,text="Mes: ")
 fechaLabel_mes.grid(row=0,column=2,sticky=SW,pady=0,padx=10)
 fechaLabel_mes.config(bg=fondo, fg=letras, font=("Times New Roman",14))
-fechaLabel_dia = Label(miFrame,text="Día: ")
-fechaLabel_dia.grid(row=0,column=3,sticky=SW,pady=0,padx=10)
-fechaLabel_dia.config(bg=fondo, fg=letras, font=("Times New Roman",14))
 
 fechaLabel = Label(miFrame,text="Fecha del accidente: ")
 fechaLabel.grid(row=1,column=0,sticky=E,pady=0,padx=10)
@@ -269,15 +328,10 @@ cuadroFecha.config(fg="black", justify='center', bg=casilla, font=("Times New Ro
 
 fecha_accidente_mes = StringVar()
 fecha_accidente_mes.set('')
-cuadroFecha = tkinter.OptionMenu(miFrame, fecha_accidente_mes, *meses)
+cuadroFecha = Entry(miFrame, textvariable=fecha_accidente_mes)
 cuadroFecha.grid(row=1,column=2,pady=0,padx=10)
 cuadroFecha.config(fg='black', justify='center', bg=casilla, font=("Times New Roman",14))
 
-fecha_accidente_dia = IntVar()
-fecha_accidente_dia.set('')
-cuadroFecha=Entry(miFrame, textvariable=fecha_accidente_dia)
-cuadroFecha.grid(row=1,column=3,pady=0,padx=10)
-cuadroFecha.config(fg="black", justify='center', bg=casilla, font=("Times New Roman",14))
 
 """
 Edad e incapacidad
@@ -420,39 +474,85 @@ check_generar_excel.grid(row=8, column=1, pady=10, padx=10)
 check_generar_excel.config(fg='black', justify='center', bg=fondo, font=("Times New Roman",14))
 
 """
-Botón Calcular y limpiar todo
+Botones por y div mil
 """
 
-botonCalcular = Button(miSalida, text = '   Calcular   ', command = calcular)
-botonCalcular.grid(row=9, column=1, pady=10, padx=10)
-botonCalcular.config(fg=letras, bg=boton, font=("Times New Roman",14))
+botonpormil = Button(miFrame, text = '  Sueldos x 1000  ', command = pormil)
+botonpormil.grid(row=8, column=2, pady=10, padx=10)
+botonpormil.config(fg=letras, bg=boton, font=("Times New Roman",14))
+
+botondivmil = Button(miFrame, text = '  Sueldos ÷ 1000  ', command = divmil)
+botondivmil.grid(row=8, column=3, pady=10, padx=10)
+botondivmil.config(fg=letras, bg=boton, font=("Times New Roman",14))
+
+"""
+Margen
+"""
+margen = Label(miFrame, text="")
+margen.grid(row=9, pady=5)
+margen.config(bg=fondo)
+
+"""
+Botón Cargar, Calcular y limpiar todo
+"""
+
+botonCargar = Button(miSalida, text = '  Cargar Excel  ', command = cargar)
+botonCargar.grid(row=0, column=0, pady=10, padx=10)
+botonCargar.config(fg=letras, bg=boton, font=("Times New Roman",14))
 
 botonLimpiar = Button(miSalida, text = '  Limpiar todo  ', command = limpiar)
-botonLimpiar.grid(row=9, column=3, pady=10, padx=10)
+botonLimpiar.grid(row=0, column=1, pady=10, padx=10)
 botonLimpiar.config(fg=letras, bg=boton, font=("Times New Roman",14))
 
+botonCalcular = Button(miSalida, text = '   Calcular   ', command = calcular)
+botonCalcular.grid(row=0, column=3, pady=10, padx=10)
+botonCalcular.config(fg=letras, bg=boton, font=("Times New Roman",14))
 
 """
 Resultados
 """
 
-resultLabel = Label(miSalida,text="Resultado: ")
-resultLabel.grid(row=10,column=0,sticky=W,pady=10,padx=10)
-resultLabel.config(bg=fondo, fg=letras, font=("Times New Roman",14))
+resultvib = Label(miSalida,text="VIB (RIPTE): ")
+resultvib.grid(row=1,column=0,sticky=W,pady=10,padx=10)
+resultvib.config(bg=fondo, fg=letras, font=("Times New Roman",14))
 
-resultado_parcial = StringVar()
-cuadroResult=Entry(miSalida, textvariable=resultado_parcial)
-cuadroResult.grid(row=10,column=1,pady=10,padx=10)
-cuadroResult.config(fg='black', justify='center', bg=casilla, font=("Times New Roman",14), state="readonly")
+resultado_vib_ripte = StringVar()
+cuadrovib=Entry(miSalida, textvariable=resultado_vib_ripte)
+cuadrovib.grid(row=1,column=1,pady=10,padx=10)
+cuadrovib.config(fg='black', justify='center', bg=casilla, font=("Times New Roman",14), state="readonly")
 
-resultotLabel = Label(miSalida,text="Resultado total: ")
-resultotLabel.grid(row=10,column=2,sticky=W,pady=10,padx=10)
-resultotLabel.config(bg=fondo, fg=letras, font=("Times New Roman",14))
+resultasa = Label(miSalida,text="Tasa de interés: ")
+resultasa.grid(row=1,column=2,sticky=W,pady=10,padx=10)
+resultasa.config(bg=fondo, fg=letras, font=("Times New Roman",14))
 
-resultado_total = StringVar()
-cuadroResultot=Entry(miSalida, textvariable=resultado_total)
-cuadroResultot.grid(row=10,column=3,pady=10,padx=10)
-cuadroResultot.config(fg='black', justify='center', bg=casilla, font=("Times New Roman",14), state="readonly")
+resultado_tasa_interes = StringVar()
+cuadrotasa=Entry(miSalida, textvariable=resultado_tasa_interes)
+cuadrotasa.grid(row=1,column=3,pady=10,padx=10)
+cuadrotasa.config(fg='black', justify='center', bg=casilla, font=("Times New Roman",14), state="readonly")
 
+resultvibtasa = Label(miSalida,text="VIB (RIPTE + TASA): ")
+resultvibtasa.grid(row=2,column=0,sticky=W,pady=10,padx=10)
+resultvibtasa.config(bg=fondo, fg=letras, font=("Times New Roman",14))
+
+resultado_vib_ripte_tasa = StringVar()
+cuadrovibtasa=Entry(miSalida, textvariable=resultado_vib_ripte_tasa)
+cuadrovibtasa.grid(row=2,column=1,pady=10,padx=10)
+cuadrovibtasa.config(fg='black', justify='center', bg=casilla, font=("Times New Roman",14), state="readonly")
+
+resultindemnizacion = Label(miSalida,text="Indemnización: ")
+resultindemnizacion.grid(row=2,column=2,sticky=W,pady=10,padx=10)
+resultindemnizacion.config(bg=fondo, fg=letras, font=("Times New Roman",14))
+
+resultado_indemnizacion = StringVar()
+cuadroindemnizacion=Entry(miSalida, textvariable=resultado_indemnizacion)
+cuadroindemnizacion.grid(row=2,column=3,pady=10,padx=10)
+cuadroindemnizacion.config(fg='black', justify='center', bg=casilla, font=("Times New Roman",14), state="readonly")
+
+"""
+Margen
+"""
+margen = Label(miSalida, text="")
+margen.grid(row=3, pady=5)
+margen.config(bg=fondo)
 
 root.mainloop()
